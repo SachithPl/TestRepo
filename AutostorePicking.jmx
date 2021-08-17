@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.4.1">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="JMETER_SCRIPTS_DIRECTORY" elementType="Argument">
+            <stringProp name="Argument.name">JMETER_SCRIPTS_DIRECTORY</stringProp>
+            <stringProp name="Argument.value">${__BeanShell(import org.apache.jmeter.services.FileServer; FileServer.getFileServer().getBaseDir();)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">30</stringProp>
+        <longProp name="ThreadGroup.start_time">1474280659000</longProp>
+        <longProp name="ThreadGroup.end_time">1474280659000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+          <stringProp name="filename">C:\Users\BooztAdmin\Desktop\JMeterLoadTestScripts\data.csv</stringProp>
+          <stringProp name="fileEncoding">UTF-8</stringProp>
+          <stringProp name="variableNames">userName,Password,portId,taskType</stringProp>
+          <boolProp name="ignoreFirstLine">true</boolProp>
+          <stringProp name="delimiter">,</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler guiclass="com.googlecode.jmeter.plugins.webdriver.sampler.gui.WebDriverSamplerGui" testclass="com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler" testname="Load the Login Page" enabled="true">
+          <stringProp name="WebDriverSampler.script">WDS.sampleResult.sampleStart();
+var portid = WDS.args[0];
+WDS.browser.get(&apos;http://em-perf-app-1.northeurope.cloudapp.azure.com/as/&apos;+portid);
+WDS.sampleResult.sampleEnd();
+</stringProp>
+          <stringProp name="WebDriverSampler.parameters">${portId}</stringProp>
+          <stringProp name="WebDriverSampler.language">javascript</stringProp>
+        </com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler>
+        <hashTree>
+          <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
+            <stringProp name="ConstantTimer.delay">0</stringProp>
+            <stringProp name="RandomTimer.range">100.0</stringProp>
+          </UniformRandomTimer>
+          <hashTree/>
+        </hashTree>
+        <com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler guiclass="com.googlecode.jmeter.plugins.webdriver.sampler.gui.WebDriverSamplerGui" testclass="com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler" testname="Enter Username &amp; Password" enabled="true">
+          <stringProp name="WebDriverSampler.script">WDS.sampleResult.sampleStart();
+var username = WDS.args[0];
+var password = WDS.args[1];
+var pkg = JavaImporter(org.openqa.selenium, org.openqa.selenium.support.ui);
+var wait = new pkg.WebDriverWait(WDS.browser, 100);
+wait.until(pkg.ExpectedConditions.presenceOfElementLocated(pkg.By.cssSelector(&apos;#flbUserName_InputTemplateItem_txbUserName&apos;)));
+var usernameField = WDS.browser.findElement(pkg.By.cssSelector(&apos;#flbUserName_InputTemplateItem_txbUserName&apos;));
+usernameField.clear();
+usernameField.sendKeys(username);
+var passwordField = WDS.browser.findElement(pkg.By.cssSelector(&apos;#flbPassword_InputTemplateItem_txbPassword&apos;));
+passwordField.clear()
+passwordField.sendKeys(password);
+WDS.sampleResult.sampleEnd();
+</stringProp>
+          <stringProp name="WebDriverSampler.parameters">${userName} ${Password}</stringProp>
+          <stringProp name="WebDriverSampler.language">javascript</stringProp>
+        </com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler>
+        <hashTree/>
+        <com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler guiclass="com.googlecode.jmeter.plugins.webdriver.sampler.gui.WebDriverSamplerGui" testclass="com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler" testname="Login" enabled="true">
+          <stringProp name="WebDriverSampler.script">WDS.sampleResult.sampleStart();
+var pkg = JavaImporter(org.openqa.selenium, org.openqa.selenium.support.ui);
+var wait = new pkg.WebDriverWait(WDS.browser, 200);
+var loginButton = WDS.browser.findElement(pkg.By.cssSelector(&apos;#btnLogin&apos;));
+loginButton.click();
+wait.until(pkg.ExpectedConditions.presenceOfElementLocated(pkg.By.cssSelector(&apos;#as-task-menu .row &gt; div:nth-child(2)&apos;)));
+WDS.sampleResult.sampleEnd();
+</stringProp>
+          <stringProp name="WebDriverSampler.parameters"></stringProp>
+          <stringProp name="WebDriverSampler.language">javascript</stringProp>
+        </com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler>
+        <hashTree/>
+        <com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler guiclass="com.googlecode.jmeter.plugins.webdriver.sampler.gui.WebDriverSamplerGui" testclass="com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler" testname="Start Picking" enabled="false">
+          <stringProp name="WebDriverSampler.script">WDS.sampleResult.sampleStart();
+var tasktype = WDS.args[0];
+var userName = WDS.args[1];
+var portid = WDS.args[2];
+var pkg = JavaImporter(org.openqa.selenium, org.openqa.selenium.support.ui, java.lang.Thread);
+var wait = new pkg.WebDriverWait(WDS.browser, 200);
+wait.until(pkg.ExpectedConditions.elementToBeClickable(pkg.By.cssSelector(&apos;#as-task-menu .row &gt; div:nth-child(2) &gt; a:nth-child(1)&apos;)));
+ClickTaskType(tasktype);
+WDS.log.info(&apos;THE TASK TYPE IS SELECTED AS - &apos; + tasktype +&apos; FROM AUTOSTORE TASK MENU PAGE FOR PORT ID: &apos; + portid );
+for (var i = 0; i &lt; 500; i++){
+	var isSuspendedTaskSelectionPageLoadingDisplayed = IsElementDisplayed(&apos;#ctl00_LoadingPanel1&apos;);	
+	var isSuspendedTaskSelectionPageDisplayed = IsElementDisplayed(&apos;#ctl00_MonitorContentPlaceholder_suspendedTasksSelectBinsView_btnContinue&apos;);
+	if(!isSuspendedTaskSelectionPageLoadingDisplayed &amp;&amp; isSuspendedTaskSelectionPageDisplayed){
+		WDS.log.info(&apos;THE SUSPENDED TASK SELECTION PAGE IS LOADED FOR PORT ID: &apos; + portid );
+		SelectSuspendedTaskGroups();
+		WDS.log.info(&apos;SELECTED SUSPENDED TASK FOR THE USER ON SUSPENDED TASK SELECTION PAGE FOR PORT ID: &apos; + portid );		
+		wait.until(pkg.ExpectedConditions.elementToBeClickable(pkg.By.cssSelector(&apos;#ctl00_MonitorContentPlaceholder_PickView_btnConfirm&apos;)));
+		break;
+	}
+
+	var isAutostorePickingLoadingDisplayed = IsElementDisplayed(&apos;#ctl00_pnlDataHider .ModalLoadingPanel&apos;);
+	if(isSuspendedTaskSelectionPageLoadingDisplayed || isAutostorePickingLoadingDisplayed){
+		pkg.Thread.sleep(500);
+		continue;
+	}
+
+	var isAutostorePickingPageDisplayed = IsElementDisplayed(&apos;#ctl00_MonitorContentPlaceholder_PickView_txtBin&apos;);
+	if(isAutostorePickingPageDisplayed){
+		break;
+	}
+
+	var isNoMoreTaskPopupPageDisplayed = IsElementDisplayed(&apos;#radAlertOkButton&apos;);
+	if(isNoMoreTaskPopupPageDisplayed){
+		break;
+	}
+}
+WDS.sampleResult.sampleEnd();
+
+function ClickTaskType(taskType){
+	var pickTaskTypePanel = WDS.browser.findElement(pkg.By.cssSelector(&apos;#as-task-menu .row &gt; div:nth-child(2)&apos;));
+	var taskTypes = pickTaskTypePanel.findElements(pkg.By.cssSelector(&apos;a h3&apos;));
+	for (var i = 0; i &lt; taskTypes.length; i++) {
+  		if (taskTypes[i].getText() == taskType){
+    		taskTypes[i].click();
+    		break;
+  		} 
+	}
+ }
+
+ function IsElementDisplayed(elementIdentifier){
+	try{
+		return WDS.browser.findElement(pkg.By.cssSelector(elementIdentifier)).isDisplayed();
+		}
+	catch(err){
+		return false;
+		}
+ }
+
+ function SelectSuspendedTaskGroups(){
+ 	wait.until(pkg.ExpectedConditions.presenceOfElementLocated(pkg.By.cssSelector(&apos;.rgMasterTable tbody&apos;)));
+ 	var suspendedTaskgroupSelectButtonByValue = pkg.By.cssSelector(&apos;#ctl00_MonitorContentPlaceholder_suspendedTasksSelectBinsView_TaskGrid_ctl00_ctl04_button1&apos;);
+	wait.until(pkg.ExpectedConditions.presenceOfElementLocated(suspendedTaskgroupSelectButtonByValue));
+	var selectButton = WDS.browser.findElement(suspendedTaskgroupSelectButtonByValue);
+	selectButton.click();
+ }
+</stringProp>
+          <stringProp name="WebDriverSampler.parameters">${taskType} ${userName} ${portId}</stringProp>
+          <stringProp name="WebDriverSampler.language">javascript</stringProp>
+        </com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler>
+        <hashTree/>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="false">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">100</stringProp>
+        </LoopController>
+        <hashTree>
+          <com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler guiclass="com.googlecode.jmeter.plugins.webdriver.sampler.gui.WebDriverSamplerGui" testclass="com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler" testname="Confirm Pick" enabled="false">
+            <stringProp name="WebDriverSampler.script">WDS.sampleResult.sampleStart();
+var tasktype = WDS.args[0];
+var portid = WDS.args[1];
+var pkg = JavaImporter(org.openqa.selenium, org.openqa.selenium.support.ui, java.lang.Thread, org.apache.commons.lang.time.StopWatch);
+var wait = new pkg.WebDriverWait(WDS.browser, 200);
+var pickMissionPageCount = 0;
+var stopWatchStarted = false;
+var watch01 = new pkg.StopWatch();
+var watch02 = new pkg.StopWatch();
+for (var i = 0; i &lt; 500; i++){
+	var isNoMoreTaskPopupPageDisplayed = IsElementDisplayed(&apos;#radAlertOkButton&apos;);
+	if(isNoMoreTaskPopupPageDisplayed){
+		WDS.log.info(&apos;NO MORE TASKS POPUP IS LOADED FOR PORT ID: &apos; + portid );
+		var okButton = WDS.browser.findElement(pkg.By.cssSelector(&apos;#radAlertOkButton&apos;));
+		okButton.click();
+		WDS.log.info(&apos;CLICKED YES BUTTON ON NO MORE TASKS POPUP FOR PORT ID: &apos; + portid );
+		continue;
+	}
+
+	var isConfirmQuantityPopupDisplayed = IsElementDisplayed(&apos;iframe&apos;);
+	if (isConfirmQuantityPopupDisplayed){
+		WDS.log.info(&apos;THE CONFIRM QUANTITY POPUP IS LOADED IN PICK MISSION PAGE FOR PORT ID: &apos; + portid );
+		TryConfirmZeroConfimationPopup();
+		WDS.log.info(&apos;THE CONFIRM QUANTITY POPUP IS CONFIRMED IN PICK MISSION PAGE FOR PORT ID: &apos; + portid );
+		continue;
+	}
+
+	var isAutostorePlacingLoadingDisplayed = IsElementDisplayed(&apos;#ctl00_LoadingPanel1&apos;);
+	var isAutostorePickingLoadingDisplayed = IsElementDisplayed(&apos;#ctl00_pnlDataHider .ModalLoadingPanel&apos;);
+	var getProductNumber = GetAttributeValue(&apos;#ctl00_MonitorContentPlaceholder_PickView_flbProduct_InputTemplateItem_txbProduct&apos;,&apos;value&apos;);	
+	if(isAutostorePickingLoadingDisplayed || isAutostorePlacingLoadingDisplayed){
+		if(!stopWatchStarted){
+			watch02.start();
+			stopWatchStarted = true;
+		}
+				
+		pkg.Thread.sleep(500);
+		var watchTwoElapsedTimeInSeconds = watch02.getTime()/1000;
+		if(watchTwoElapsedTimeInSeconds &gt; 4 &amp;&amp; getProductNumber != &quot;&quot;){
+			WDS.browser.navigate().refresh();
+			WDS.log.info(&apos;PICK MISSION PAGE IS REFRESHED (ISREADY = 1) FOR PORT ID: &apos; + portid );
+			watch02.stop();
+			watch02.reset();
+			stopWatchStarted = false;
+		}
+				
+		continue;
+	}
+
+	var isAutostorePickingPageDisplayed = IsElementDisplayed(&apos;#ctl00_MonitorContentPlaceholder_PickView_txtBin&apos;);
+	if(isAutostorePickingPageDisplayed){
+		pickMissionPageCount++;
+		if(pickMissionPageCount == 2){
+			watch01.stop();
+			var watchOneElapsedTimeInSeconds = watch01.getTime()/1000;
+			WDS.log.info(&apos;MISSION LOADING TIME IN PORT ID: &apos; + portid + &apos; IS &apos; + watchOneElapsedTimeInSeconds + &apos; Sec.&apos;);
+			break;
+		}
+		WDS.log.info(&apos;THE PICK MISSION IS LOADED IN PICK MISSION PAGE FOR PORT ID: &apos; + portid );
+		var confirmButton = WDS.browser.findElement(pkg.By.cssSelector(&apos;#ctl00_MonitorContentPlaceholder_PickView_btnConfirm&apos;));
+		confirmButton.click();
+		watch01.start();
+		WDS.log.info(&apos;THE CONFIRM BUTTON IS CLICKED IN PICK MISSION PAGE FOR PORT ID: &apos; + portid );
+		continue;
+	}
+	
+	var IsPickPlacingPageDipslayed = IsElementDisplayed(&apos;#ctl00_MonitorContentPlaceholder_PickView_txtBoxInfo&apos;);
+	var boxValueInPlacingPage = GetAttributeValue(&apos;#ctl00_MonitorContentPlaceholder_PickView_txtBoxInfo&apos;, &apos;value&apos;);
+	if(IsPickPlacingPageDipslayed &amp;&amp; !isNoMoreTaskPopupPageDisplayed &amp;&amp; boxValueInPlacingPage != &quot;&quot;){
+		WDS.log.info(&apos;THE PICK PLACING PAGE IS LOADED FOR PORT ID: &apos; + portid );
+		confirmButton.click();
+		WDS.log.info(&apos;THE CONFIRM BUTTON IS CLICKED IN PICK PLACING PAGE FOR PORT ID: &apos; + portid );
+		break;
+	}
+
+	var isSuspendedTaskSelectionPageDisplayed = IsElementDisplayed(&apos;#ctl00_MonitorContentPlaceholder_suspendedTasksSelectBinsView_btnContinue&apos;);
+	if(isSuspendedTaskSelectionPageDisplayed){
+		WDS.log.info(&apos;THE SUSPENDED TASK SELECTION PAGE IS LOADED FOR PORT ID: &apos; + portid );
+		SelectSuspendedTaskGroups();
+		WDS.log.info(&apos;SELECTED SUSPENDED TASK FOR THE USER ON SUSPENDED TASK SELECTION PAGE FOR PORT ID: &apos; + portid );
+		continue;
+	}
+
+	var isAutostoreTaskMenuPageDisplayed = IsElementDisplayed(&apos;#as-task-menu .row &gt; div:nth-child(2) &gt; a:nth-child(1)&apos;);
+	if(isAutostoreTaskMenuPageDisplayed){
+		WDS.log.info(&apos;THE AUTOSTORE TASK MENU PAGE IS LOADED FOR PORT ID: &apos; + portid ); 
+		break;
+	}
+
+	if(i == 500){
+		WDS.log.info(&apos;CONTINUOUS LOADING IN PICK MISSION PAGE FOR PORT ID: &apos; + portid );
+	}
+ }
+WDS.sampleResult.sampleEnd();
+
+function IsElementDisplayed(elementIdentifier){
+	try{
+		return WDS.browser.findElement(pkg.By.cssSelector(elementIdentifier)).isDisplayed();
+		}
+	catch(err){
+		return false;
+		}
+ }
+
+ function GetAttributeValue(elementIdentifier, attribute){
+ 	try{	
+		return WDS.browser.findElement(pkg.By.cssSelector(elementIdentifier)).getAttribute(attribute);
+ 	}
+	catch(err){
+		return &quot;&quot;;
+		}
+ }
+
+ function TryConfirmZeroConfimationPopup(){
+ 	for (var i = 0; i &lt; 100; i++){
+		if(IsElementDisplayed(&apos;.TelerikModalOverlay&apos;)){
+			try{
+				var iframe = WDS.browser.findElement(pkg.By.cssSelector(&apos;iframe&apos;));
+				WDS.browser.switchTo().frame(iframe);
+				var yesButton = WDS.browser.findElement(pkg.By.cssSelector(&apos;#locationEmpty&apos;));
+				yesButton.click();
+				WDS.browser.switchTo().defaultContent();
+			}
+			catch(err){
+			}
+				
+			pkg.Thread.sleep(500);
+			continue;
+		}
+		break;
+	}
+ }
+
+ function ClickTaskType(taskType){
+	var pickTaskTypePanel = WDS.browser.findElement(pkg.By.cssSelector(&apos;#as-task-menu .row &gt; div:nth-child(2)&apos;));
+	var taskTypes = pickTaskTypePanel.findElements(pkg.By.cssSelector(&apos;a h3&apos;));
+	for (var i = 0; i &lt; taskTypes.length; i++) {
+  		if (taskTypes[i].getText() == taskType){
+    		taskTypes[i].click();
+    		break;
+  		} 
+	}
+ }
+
+ function SelectSuspendedTaskGroups(){
+ 	wait.until(pkg.ExpectedConditions.presenceOfElementLocated(pkg.By.cssSelector(&apos;.rgMasterTable tbody&apos;)));
+ 	var suspendedTaskgroupSelectButtonByValue = pkg.By.cssSelector(&apos;#ctl00_MonitorContentPlaceholder_suspendedTasksSelectBinsView_TaskGrid_ctl00_ctl04_button1&apos;);
+	wait.until(pkg.ExpectedConditions.presenceOfElementLocated(suspendedTaskgroupSelectButtonByValue));
+	var suspendedTaskgroupSelectButton = WDS.browser.findElement(suspendedTaskgroupSelectButtonByValue);
+	suspendedTaskgroupSelectButton.click();
+ }
+</stringProp>
+            <stringProp name="WebDriverSampler.parameters">${taskType} ${portId}</stringProp>
+            <stringProp name="WebDriverSampler.language">javascript</stringProp>
+          </com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Delay After Confirm" enabled="false">
+            <stringProp name="ConstantTimer.delay">2000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler guiclass="com.googlecode.jmeter.plugins.webdriver.sampler.gui.WebDriverSamplerGui" testclass="com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler" testname="Exit taskgroup" enabled="false">
+          <stringProp name="WebDriverSampler.script">WDS.sampleResult.sampleStart();
+var portid = WDS.args[0];
+var pkg = JavaImporter(org.openqa.selenium, org.openqa.selenium.support.ui, java.lang.Thread);
+var isPickMissionExitButtonClicked = false;
+var isConfirmTaskExitPopupConfirmed = false;
+for (var i = 0; i &lt; 500; i++){
+	var isAutostorePickingLoadingDisplayed = IsElementDisplayed(&apos;#ctl00_LoadingPanel1&apos;);
+	var isAutostorePickingPageDisplayed = IsElementDisplayed(&apos;#ctl00_MonitorContentPlaceholder_PickView_txtBin&apos;);
+	if (!isAutostorePickingLoadingDisplayed &amp;&amp; isAutostorePickingPageDisplayed){
+		if(isPickMissionExitButtonClicked){
+			continue;
+		}
+		var ExitButton = WDS.browser.findElement(pkg.By.cssSelector(&apos;#ctl00_MonitorContentPlaceholder_PickView_btnExit&apos;));
+		ExitButton.click();
+		WDS.log.info(&apos;CLICKED EXIT BUTTON ON PICK MISSION PAGE FOR PORT ID: &apos; + portid );
+		isPickMissionExitButtonClicked = true;
+		continue;
+	}
+
+	var isconfirmTaskExitPopupDisplayed = IsElementDisplayed(&apos;.rwTable #asMasterRadConfirmYesButton&apos;);
+	if(isconfirmTaskExitPopupDisplayed){
+		if(isConfirmTaskExitPopupConfirmed){
+			continue;
+		}
+		
+		var yesButton = WDS.browser.findElement(pkg.By.cssSelector(&apos;.rwTable #asMasterRadConfirmYesButton&apos;));
+		yesButton.click();	
+		WDS.log.info(&apos;CLICKED YES BUTTON ON CONFIRM TASK EXIT POPUP IN PICK MISSION PAGE FOR PORT ID: &apos; + portid );
+		isConfirmTaskExitPopupConfirmed = true;
+		continue;
+	}
+
+	var isAutostoreTaskMenuPageDisplayed = IsElementDisplayed(&apos;#as-task-menu .row &gt; div:nth-child(2) &gt; a:nth-child(1)&apos;);
+	if(isAutostoreTaskMenuPageDisplayed){
+		WDS.log.info(&apos;THE AUTOSTORE TASK MENU PAGE IS LOADED FOR PORT ID: &apos; + portid );
+		break;
+	}
+
+	pkg.Thread.sleep(500);
+}
+WDS.sampleResult.sampleEnd()
+
+function IsElementDisplayed(elementIdentifier){
+	try{
+		return WDS.browser.findElement(pkg.By.cssSelector(elementIdentifier)).isDisplayed();
+		}
+	catch(err){
+		return false;
+		}
+ }</stringProp>
+          <stringProp name="WebDriverSampler.parameters"> ${portId}</stringProp>
+          <stringProp name="WebDriverSampler.language">javascript</stringProp>
+        </com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler>
+        <hashTree/>
+        <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
+          <collectionProp name="CookieManager.cookies"/>
+          <boolProp name="CookieManager.clearEachIteration">true</boolProp>
+          <boolProp name="CookieManager.controlledByThreadGroup">false</boolProp>
+          <stringProp name="CookieManager.policy">default</stringProp>
+        </CookieManager>
+        <hashTree/>
+        <CacheManager guiclass="CacheManagerGui" testclass="CacheManager" testname="HTTP Cache Manager" enabled="true">
+          <boolProp name="clearEachIteration">true</boolProp>
+          <boolProp name="useExpires">true</boolProp>
+          <boolProp name="CacheManager.controlledByThread">false</boolProp>
+        </CacheManager>
+        <hashTree/>
+        <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig guiclass="com.googlecode.jmeter.plugins.webdriver.config.gui.ChromeDriverConfigGui" testclass="com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig" testname="jp@gc - Chrome Driver Config" enabled="true">
+          <stringProp name="WebDriverConfig.proxy_type">SYSTEM</stringProp>
+          <stringProp name="WebDriverConfig.proxy_pac_url"></stringProp>
+          <stringProp name="WebDriverConfig.http_host"></stringProp>
+          <intProp name="WebDriverConfig.http_port">8080</intProp>
+          <boolProp name="WebDriverConfig.use_http_for_all_protocols">true</boolProp>
+          <stringProp name="WebDriverConfig.https_host"></stringProp>
+          <intProp name="WebDriverConfig.https_port">8080</intProp>
+          <stringProp name="WebDriverConfig.ftp_host"></stringProp>
+          <intProp name="WebDriverConfig.ftp_port">8080</intProp>
+          <stringProp name="WebDriverConfig.socks_host"></stringProp>
+          <intProp name="WebDriverConfig.socks_port">8080</intProp>
+          <stringProp name="WebDriverConfig.no_proxy">localhost</stringProp>
+          <boolProp name="WebDriverConfig.maximize_browser">true</boolProp>
+          <boolProp name="WebDriverConfig.reset_per_iteration">false</boolProp>
+          <boolProp name="WebDriverConfig.dev_mode">false</boolProp>
+          <stringProp name="ChromeDriverConfig.chromedriver_path">C:\Users\BooztAdmin\Desktop\JMeterLoadTestScripts\chromedriver.exe</stringProp>
+          <boolProp name="ChromeDriverConfig.android_enabled">false</boolProp>
+          <boolProp name="ChromeDriverConfig.headless_enabled">false</boolProp>
+          <boolProp name="ChromeDriverConfig.insecurecerts_enabled">true</boolProp>
+          <boolProp name="ChromeDriverConfig.incognito_enabled">false</boolProp>
+          <boolProp name="ChromeDriverConfig.no_sandbox_enabled">false</boolProp>
+        </com.googlecode.jmeter.plugins.webdriver.config.ChromeDriverConfig>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="false">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename">C:\apache-jmeter-3.0\bin\Report\Report2_15_9_27.csv</stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
